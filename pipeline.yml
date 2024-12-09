@@ -1,0 +1,70 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages
+ - stage: StartingPoint
+   job: 
+      - job: j1
+        steps:
+        - script: echo Starting Point=Stage1!
+          displayName: 'Starting Point'
+ 
+  - stage: StageComponent A
+    dependsOn:  StartingPoint
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage2 Component A
+          displayName: 'Stage Component A'
+  - stage: StageComponent B
+    dependsOn:  StartingPoint
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage3 Component B
+          displayName: 'Stage Component B'
+  - stage: StageComponent C
+    dependsOn:  StartingPoint
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage4 Component C
+          displayName: 'Stage Component C'
+  
+   - stage: ProduceAtrifact
+    dependsOn: 
+     -  StageComponent A
+     -  StageComponent B
+     -  StageComponent C
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage5 Produce Artifact
+          displayName: 'Produce Artifact'
+
+    - stage: DeployApplication
+      dependsOn:  ProduceAtifact
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage6 Deploy Application
+          displayName: 'Deploy Application'
+
+    - stage: RolllingBack
+      dependsOn:  ProduceArtifact
+      job: 
+      - job: j1
+        steps:
+        - script: echo Stage7 Rollling Back
+          displayName: 'Rollling Back'
+
+
+
